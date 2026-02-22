@@ -51,3 +51,22 @@ out$plot
 write.csv(out$results,file="01_mtry.csv",row.names=T)
 ```
 ![res](https://github.com/cdesterke/ggrftuning/blob/main/01_mtry.png)
+
+
+## Step 02: Tune the mtree Parameter of a Random Forest Model with a selected mtry
+
+
+ 
+```r
+## load script 02
+source("02_tune_ntree_rf.R")
+## 
+out <- tune_ntree_rf(X, Y, mtry = 2)
+out$results
+out$plot
+## save
+write.csv(out$results,file="02_ntree.csv",row.names=T)
+```
+![res](https://github.com/cdesterke/ggrftuning/blob/main/02_ntree.png)
+
+

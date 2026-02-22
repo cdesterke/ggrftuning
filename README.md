@@ -166,13 +166,13 @@ item {importance_df} A data.frame of variable importances.
 
 item {model_rf} The fitted randomForest model.
 
-item{trainX} Training predictors.
+item {trainX} Training predictors.
 
-item: {trainY} Training response.
+item {trainY} Training response.
 
-item: {testX}Test predictors.
+item {testX} Test predictors.
 
-item: {testY}Test response.
+item {testY} Test response.
 
 ```r
 source("04_rf_model_with_oob.R")

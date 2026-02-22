@@ -28,7 +28,7 @@ parameter: Y A vector or factor containing the response variable. Must have
 
 parameter: ntree Integer. Number of trees to grow. Default is 500.
 
-parameter base_size Numeric. Base font size for the ggplot theme. Default is 16.
+parameter: base_size Numeric. Base font size for the ggplot theme. Default is 16.
 
 return a list with two elements:
  

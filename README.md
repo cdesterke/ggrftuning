@@ -47,6 +47,7 @@ out <- tune_mtry_rf(X, Y,ntree=500)
 ## output
 out$results
 out$plot
-
+## save
+write.csv(out$results,file="01_mtry.csv",row.names=T)
 ```
 ![res](https://github.com/cdesterke/ggrftuning/blob/main/01_mtry.png)

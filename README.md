@@ -32,9 +32,9 @@ parameter: base_size Numeric. Base font size for the ggplot theme. Default is 16
 
 return a list with two elements:
  
- item{results}{A data.frame containing {mtry} and corresponding OOB error.
+ item{results} A data.frame containing {mtry} and corresponding OOB error.
  
- item{plot}{A ggplot2 object visualizing OOB error vs. {mtry}.
+ item{plot} A ggplot2 object visualizing OOB error vs. {mtry}.
  
 ```r
 ## load script 01

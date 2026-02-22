@@ -95,6 +95,32 @@ write.csv(out$results,file="02_ntree.csv",row.names=T)
 
 ## Step 03: Tune best partition train/test
 
+This function evaluates the effect of different train/test split proportions
+on the performance of a Random Forest classifier using the {caret}
+interface to the \code{ranger} engine. The user provides predictors {X},
+response {Y}, and fixed values for {mtry} and {ntree}.
+The function returns accuracy for each split proportion and a ggplot2
+visualization with ggrepel labels.
+
+parameter: X A data.frame or matrix of predictor variables.
+
+parameter: Y A factor containing the response variable. Must have the same
+number of rows as {X}.
+
+parameter: mtry Integer. Number of variables randomly sampled at each split.
+
+parameter: ntree Integer. Number of trees to grow.
+
+parameter: split_seq Numeric vector of train proportions to evaluate.
+Default is \code{c(0.55, 0.60, 0.65, 0.70, 0.75, 0.80)}.
+
+parameter: base_size Numeric. Base font size for the ggplot theme. Default is 16.
+
+return A list with:
+
+item {results} A data.frame with split proportion and accuracy.
+
+item {plot} A ggplot2 object visualizing accuracy vs. split proportion.
 
 ```r
 source("03_tune_split_ratio_caret.R")
@@ -107,5 +133,66 @@ out$plot
 write.csv(out$results,file="03_bestsplit.csv",row.names=T)
 ```
 ![res](https://github.com/cdesterke/ggrftuning/blob/main/03_bestsplit.png)
+
+## Step 04: run rf model with selected parameters
+
+This function trains a Random Forest classifier using a user-defined
+train/test split,{mtry}, and {ntree}. It returns a summary of
+model performance, variable importances, and a ggplot2 visualization showing
+the evolution of out-of-bag (OOB) error across trees, both globally and for
+each class. The global OOB curve is displayed in black dashed style, while
+class-specific OOB curves use the standard ggplot2 color palette.
+
+parameter: X A data.frame or matrix of predictor variables.
+
+parameter: Y A factor containing the response variable. Must have the same
+number of rows as {X}.
+
+parameter: mtry Integer. Number of variables randomly sampled at each split.
+
+parameter: ntree Integer. Number of trees to grow.
+
+parameter: split Numeric. Proportion of data used for training (between 0 and 1).
+
+parameter: base_size Numeric. Base font size for the ggplot theme. Default is 16.
+
+return A list with:
+
+item {results} A list containing OOB error, test accuracy, and confusion matrix.
+
+item {plot} A ggplot2 object showing OOB error vs. number of trees for each class.
+
+item {importance_df} A data.frame of variable importances.
+
+item {model_rf} The fitted randomForest model.
+
+item{trainX} Training predictors.
+
+item: {trainY} Training response.
+
+item: {testX}Test predictors.
+
+item: {testY}Test response.
+
+```r
+source("04_rf_model_with_oob.R")
+##run
+out <- rf_model_with_oob(X = X, Y = Y, mtry = 2, ntree = 150, split = 0.65)
+##
+out$results
+out$plot
+## model access
+out$model_rf
+## split access
+out$tainX
+out$trainY
+out$testX
+out$testY
+##save model
+save(out,file="model_rf.rda")
+
+```
+![res](https://github.com/cdesterke/ggrftuning/blob/main/04_model.png)
+
 
 

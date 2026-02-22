@@ -81,13 +81,31 @@ item {plot} A ggplot2 object visualizing OOB error vs. {ntree}.
 ```r
 ## load script 02
 source("02_tune_ntree_rf.R")
-## 
+## run
 out <- tune_ntree_rf(X, Y, mtry = 2)
+## output
 out$results
 out$plot
 ## save
 write.csv(out$results,file="02_ntree.csv",row.names=T)
 ```
 ![res](https://github.com/cdesterke/ggrftuning/blob/main/02_ntree.png)
+
+
+
+## Step 03: Tune best partition train/test
+
+
+```r
+source("03_tune_split_ratio_caret.R")
+## run
+out <- tune_split_ratio_caret(X, Y, mtry = 2, ntree = 500)
+## output
+out$results
+out$plot
+## save
+write.csv(out$results,file="03_bestsplit.csv",row.names=T)
+```
+![res](https://github.com/cdesterke/ggrftuning/blob/main/03_bestsplit.png)
 
 

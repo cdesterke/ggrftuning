@@ -55,7 +55,28 @@ write.csv(out$results,file="01_mtry.csv",row.names=T)
 
 ## Step 02: Tune the mtree Parameter of a Random Forest Model with a selected mtry
 
+This function performs a grid search over a user-defined set of {ntree}
+values for a Random Forest classifier, using out-of-bag (OOB) error as the
+evaluation metric. It accepts predictors {X} and response \code{Y}
+as separate inputs, fits models for each {ntree}, and returns both
+the tuning results and a ggplot2 visualization with ggrepel labels.
 
+parameter: X A data.frame or matrix of predictor variables.
+
+parameter: Y A vector or factor containing the response variable. Must have
+the same number of rows as {X}.
+
+parameter: mtry Integer. The number of variables randomly sampled at each split. Must be between 1 and {ncol(X)}.
+
+parameter: ntree_grid A numeric vector of ntree values to evaluate. Default is {seq(100, 1000, by = 50)}.
+
+parameter base_size Numeric. Base font size for the ggplot theme. Default is 16.
+
+return A list with two elements:
+
+item {results} A data.frame containing {ntree} and corresponding OOB error.
+
+item {plot} A ggplot2 object visualizing OOB error vs. {ntree}.
  
 ```r
 ## load script 02

@@ -8,7 +8,7 @@ Tuning rf with ggplot2 outputs and XAI diagnostic
 data(iris)
 ## no missing data
 iris<-iris[complete.cases(iris),]
-## last colonne of the data need to be a factor
+## last column of the data need to be a factor
 str(iris)
 ```
 

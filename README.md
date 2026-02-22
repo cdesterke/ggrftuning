@@ -194,5 +194,42 @@ save(out,file="model_rf.rda")
 ```
 ![res](https://github.com/cdesterke/ggrftuning/blob/main/04_model.png)
 
+## Step 05: confusion matrix on test data
+
+This function takes a fitted Random Forest model along with test predictors
+and test response, and returns predictions, accuracy, a confusion matrix,
+and a ggplot2 heatmap of the confusion matrix with accuracy in the subtitle.
+
+parameter: model_rf A fitted randomForest model.
+
+parameter: testX A data.frame or matrix of predictors for testing.
+
+parameter: testY A factor containing the true test labels.
+
+parameter: base_size Numeric. Base font size for the ggplot theme. Default = 16.
+
+return A list with:
+
+item {predictions} Predicted class labels.
+
+item {accuracy} Classification accuracy on the test set.
+
+item{confusion_matrix} A confusion matrix comparing predictions vs truth.
+
+item{plot} A ggplot2 heatmap of the confusion matrix.
+
+```r
+source("05_confusion matrice.R")
+##run
+pred_out <- rf_predict_test_heatmap(out$model_rf, out$testX, out$testY)
+
+##output
+pred_out$plot
+pred_out$predictions
+pred_out$accuracy
+pred_out$confusion_matrix
+
+```
 
 
+![res](https://github.com/cdesterke/ggrftuning/blob/main/05_pred.png)

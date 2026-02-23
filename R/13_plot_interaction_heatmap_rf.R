@@ -64,8 +64,10 @@ plot_interaction_heatmap_rf <- function(model, data, palette = "viridis") {
       f2 <- features[j]
 
       # PDP univariés
-      pd1 <- pdp::partial(model, pred.var = f1, train = data, type = "classification", prob = TRUE)
-      pd2 <- pdp::partial(model, pred.var = f2, train = data, type = "classification", prob = TRUE)
+      pd1 <- pdp::partial(model, pred.var = f1, train = data,
+                          type = "classification", prob = TRUE)
+      pd2 <- pdp::partial(model, pred.var = f2, train = data,
+                          type = "classification", prob = TRUE)
 
       # PDP bivarié
       pd12 <- pdp::partial(model, pred.var = c(f1, f2), train = data,
@@ -89,7 +91,15 @@ plot_interaction_heatmap_rf <- function(model, data, palette = "viridis") {
   ggplot2::ggplot(df, ggplot2::aes(Feature1, Feature2, fill = H)) +
     ggplot2::geom_tile() +
     viridis::scale_fill_viridis(option = palette) +
-    ggplot2::theme_minimal() +
+    ggplot2::theme_minimal(base_size = 16) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(
+        angle = 90, hjust = 1, vjust = 0.5, size = 14
+      ),
+      axis.text.y = ggplot2::element_text(size = 14),
+      axis.title.x = ggplot2::element_text(size = 16),
+      axis.title.y = ggplot2::element_text(size = 16)
+    ) +
     ggplot2::labs(
       title = "Interaction Heatmap (Friedman H-statistic)",
       x = "",

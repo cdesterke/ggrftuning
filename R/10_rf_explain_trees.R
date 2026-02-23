@@ -32,66 +32,80 @@
 #' }
 #'
 #' @export
-rf_explain_trees <- function(model_rf, X_train, Y_train, base_size = 16) {
+rf_explain_trees <- function(model_rf,
+                             X_train,
+                             Y_train,
+                             base_size = 16) {
 
-  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
-  if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' is required.")
-  if (!requireNamespace("tidyr", quietly = TRUE)) stop("Package 'tidyr' is required.")
-
-  ntree <- model_rf$ntree
+  # --- Compute tree-wise permutation importance ------------------------------
+  n_trees <- model_rf$ntree
   vars <- colnames(X_train)
 
-  # Storage
-  imp_list <- list()
+  tree_importance <- lapply(seq_len(n_trees), function(t) {
+    pred_base <- predict(model_rf, X_train, predict.all = TRUE)$individual[, t]
+    err_base <- mean(pred_base != Y_train)
 
-  # Compute permutation importance per tree
-  for (t in seq_len(ntree)) {
-
-    # Predictions from tree t only
-    pred_t <- predict(model_rf, X_train, predict.all = TRUE)$individual[, t]
-
-    base_err <- mean(pred_t != Y_train)
-
-    for (v in vars) {
-
+    imp <- sapply(vars, function(v) {
       X_perm <- X_train
       X_perm[[v]] <- sample(X_perm[[v]])
-
       pred_perm <- predict(model_rf, X_perm, predict.all = TRUE)$individual[, t]
-      perm_err <- mean(pred_perm != Y_train)
+      mean(pred_perm != Y_train) - err_base
+    })
 
-      imp_list[[length(imp_list) + 1]] <- data.frame(
-        Tree = t,
-        Variable = v,
-        Importance = perm_err - base_err
-      )
-    }
-  }
-
-  imp_df <- dplyr::bind_rows(imp_list)
-
-  # Plot
-  p <- ggplot2::ggplot(
-    imp_df,
-    ggplot2::aes(
-      x = Tree,
-      y = Importance,
-      color = Variable,
-      shape = Variable
+    data.frame(
+      tree = t,
+      variable = vars,
+      importance = imp,
+      stringsAsFactors = FALSE
     )
+  })
+  tree_importance <- do.call(rbind, tree_importance)
+
+  # --- Custom 26-color qualitative palette -----------------------------------
+  palette26 <- c(
+    "#332288", "#117733", "#44AA99", "#88CCEE",
+    "#DDCC77", "#CC6677", "#AA4499", "#882255",
+    "#661100", "#6699CC", "#AA4466", "#4477AA",
+    "#228833", "#66CCEE", "#EE6677", "#CCBB44",
+    "#994455", "#EECC66", "#77AADD", "#99DDFF",
+    "#44BB99", "#BB5566", "#DDDDDD", "#555555",
+    "#000000", "#BBBBBB"
+  )
+
+  # --- Plot -------------------------------------------------------------------
+  p <- ggplot2::ggplot(
+    tree_importance,
+    ggplot2::aes(x = tree, y = importance, color = variable)
   ) +
-    ggplot2::geom_point(size = 2.8, alpha = 0.8) +
-    ggplot2::geom_smooth(se = FALSE, linewidth = 1) +
-    ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::geom_point(
+      size = 2,
+      alpha = 1,
+      shape = 16
+    ) +
+    ggplot2::geom_smooth(
+      method = "loess",
+      se = FALSE,
+      linewidth = 1,
+      alpha = 1
+    ) +
+    ggplot2::scale_color_manual(
+      values = palette26[seq_along(unique(tree_importance$variable))]
+    ) +
     ggplot2::labs(
       title = "Explainable AI: Tree-wise Variable Importance",
-      subtitle = "Permutation importance per tree",
+      subtitle = "Permutation importance per tree with LOESS smoothing per feature",
       x = "Tree index",
-      y = "Permutation importance"
+      y = "Permutation importance (Δ error)",
+      color = "Variable"
+    ) +
+    ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::theme(
+      legend.position = "right",
+      panel.grid.minor = ggplot2::element_blank()
     )
 
   list(
-    tree_importance = imp_df,
+    tree_importance = tree_importance,
     plot = p
   )
 }

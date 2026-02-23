@@ -31,7 +31,7 @@ plot_ice_rf <- function(model, data, feature) {
   df <- as.data.frame(ice)
 
   ggplot2::ggplot(df, ggplot2::aes_string(x = feature, y = "yhat", group = "yhat.id")) +
-    ggplot2::geom_line(alpha = 0.25, color = "#1f77b4") +
+    ggplot2::geom_line(alpha = 1, color = "#1f77b4") +
     ggplot2::theme_minimal() +
     ggplot2::labs(
       title = paste("ICE curves -", feature),
@@ -39,3 +39,4 @@ plot_ice_rf <- function(model, data, feature) {
       y = "Predicted probability"
     )
 }
+

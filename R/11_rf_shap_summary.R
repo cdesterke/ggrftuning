@@ -105,7 +105,7 @@ rf_shap_summary <- function(model_rf, X_train,
           color = SHAP
         )
       ) +
-        ggplot2::geom_point(alpha = 0.6) +
+        ggplot2::geom_point(alpha = 1) +
         viridis::scale_color_viridis(option = palette) +
         ggplot2::theme_minimal(base_size = base_size) +
         ggplot2::labs(
@@ -151,7 +151,7 @@ rf_shap_summary <- function(model_rf, X_train,
         color = SHAP
       )
     ) +
-      ggplot2::geom_point(alpha = 0.6) +
+      ggplot2::geom_point(alpha = 1) +
       viridis::scale_color_viridis(option = palette) +
       ggplot2::theme_minimal(base_size = base_size) +
       ggplot2::labs(
@@ -169,4 +169,5 @@ rf_shap_summary <- function(model_rf, X_train,
     plots = plot_list
   )
 }
+
 
